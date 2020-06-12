@@ -5,7 +5,11 @@ from django.http import HttpResponse, Http404, JsonResponse
 from .models import Tweet
 from .forms import TweetForm
 from django.utils.http import is_safe_url
-from .serializers import TweetSerializer, TweetActionSerializer
+from .serializers import (
+    TweetSerializer, 
+    TweetActionSerializer,
+    TweetCreateSerializer
+)
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
@@ -27,7 +31,7 @@ def home_view(request, *args, **kwargs):
 # @authentication_classes([SessionAuthentication, CustomeClass])  #adds that only session Auth is valid, then passes to role permission
 @permission_classes([IsAuthenticated]) # **Check out the RES API course for better detail on Class based views and better Auth role handling
 def tweet_create_view(request, *args, **kwargs):
-    serializer = TweetSerializer(data=request.POST or None)
+    serializer = TweetCreateSerializer(data=request.POST or None)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
         return Response(serializer.data, status=201)
@@ -66,6 +70,7 @@ def tweet_action_view(request, *args, **kwargs):
         data = serializer.validated_data
         tweet_id = data.get('id')
         action = data.get('action')
+        content = data.get('content')
 
         qs = Tweet.objects.filter(id=tweet_id)
         if not qs.exists():
@@ -77,11 +82,16 @@ def tweet_action_view(request, *args, **kwargs):
             return Response(serializer.data, status=200)
         elif action == 'unlike':
             obj.likes.remove(request.user)
-            return Response({}, status=200)
+            serializer = TweetSerializer(obj)
+            return Response(serializer.data, status=200)
         elif action == 'retweet':
-            # this is todo
-            # pass
-            return Response({"message": "retweeted"}, status=200)
+            new_tweet = Tweet.objects.create(
+                user=request.user, 
+                parent=obj,
+                content=content,
+                )
+            serializer = TweetSerializer(new_tweet)
+            return Response(serializer.data, status=201)
 
     # qs = qs.filter(user=request.user)
     # if not qs.exists():

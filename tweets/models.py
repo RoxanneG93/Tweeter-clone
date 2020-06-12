@@ -16,6 +16,7 @@ class TweetLike(models.Model):
 class Tweet(models.Model):
     # can do this if we want null to happen when user is deleted
     # user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, on_delete=models.CASCADE) # OneToMany users can have many tweets - many tweets can have 1 user
     likes = models.ManyToManyField(User, related_name='tweet_user', blank=True, through=TweetLike) #one Tweet can have many Users, and one User can have many Tweets
     content = models.TextField(blank=True, null=True)
@@ -30,13 +31,19 @@ class Tweet(models.Model):
     # will order descending order
     class Meta:
         ordering = ['-id']
+    
+    @property
+    def is_retweet(self):
+        return self.parent != None
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "content": self.content,
-            "likes": random.randint(0, 300)
-        }
+
+    # ==== Old way or Serialilzing ===
+    # def serialize(self):
+    #     return {
+    #         "id": self.id,
+    #         "content": self.content,
+    #         "likes": random.randint(0, 300)
+    #     }
     
 
 

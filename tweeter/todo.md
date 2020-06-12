@@ -15,7 +15,10 @@
         -> Text
         -> Image
     -> Delete
-    -> Retweet
+    -> Retweeting
+        -> Read only serializer
+        -> Create only serializer
+    -> Liking or Unliking
 
 3. Following / Followers
 

@@ -184,15 +184,15 @@ This is amazing
     }
 
     function RetweetBtn(tweet){
-        return "<p><button class='btn btn-outline-success' onclick=handleTweetAction("+ tweet.id +"," +tweet.likes+", 'retweet')>Retweet</button></p>"
+        return "<p><button class='btn btn-outline-success' onclick=handleTweetAction("+ tweet.id +"," +tweet.likes+",'retweet')>Retweet</button></p>"
     }
 
     function likeBtn(tweet){
-        return "<p><button class='btn btn-primary' onclick=handleTweetAction("+ tweet.id +"," +tweet.likes+", 'like')>"+ tweet.likes +" Likes</button></p>"
+        return "<p><button class='btn btn-primary' onclick=handleTweetAction("+ tweet.id +"," +tweet.likes+",'like')>"+ tweet.likes +" Likes</button></p>"
     }
 
     function unLikeBtn(tweet){
-        return "<p><button class='btn btn-outline-primary' onclick=handleTweetAction("+ tweet.id +"," +tweet.likes+", 'unlike')>Unlike</button></p>"
+        return "<p><button class='btn btn-outline-primary' onclick=handleTweetAction("+ tweet.id +"," +tweet.likes+",'unlike')>Unlike</button></p>"
     }
 
     function formatTweetElement(tweet){
