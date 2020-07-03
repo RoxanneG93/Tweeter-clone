@@ -31,7 +31,6 @@ function App() {
     const myCallback = (response, status) => {
       if(status === 200){
         setTweets(response)
-        console.log(tweets)
       } else {
         alert('there was an error')
       }
